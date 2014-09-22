@@ -1,0 +1,1 @@
+tcpdump  -i em1 -nn -l -O "tcp[2:2] >= 1000 and tcp[2:2] < 10999 and tcp[4:4] = 17 and tcp[tcpflags] & tcp-syn != 0" | sed -u 's/.*IP \([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\).[0-9]*[^0-9]*[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*.10\([0-9]*\).* /\1 \2 /' | xargs -t -l -i bash -c './guard.sh {} &' &>/dev/null
