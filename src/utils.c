@@ -12,3 +12,8 @@ char *get_line (char *s, size_t n, FILE *f)
   }
   return p;
 }
+
+void usage(){
+	fprintf(stderr, "Usage: %s \n", argv[0]);
+	exit(1);
+}

@@ -11,11 +11,11 @@ int stopPacketCapture(){
 	//stop libpcap?
 	return 0;
 }
-int sendPacket(char* host, int port, char* command){
+int sendClientPacket(char* host, int port, char* command){
 	#ifdef DEBUG
 		printf("host:%s \nport: %d \ncommand: %s\n",host, port, command);
 	#endif
-	//encode
+	//encode command
 	
 	//send on raw socket
 	return 0;
@@ -36,7 +36,7 @@ int startClient( char* host, int port, char* command){
 	//		quit = 1;
 	//	}
 		//send packet
-		sendPacket(host, port, command);
+		sendClientPacket(host, port, command);
 		
 	//}
 	//stopPacketCapture();
