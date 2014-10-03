@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "main.h"
+
 /** 
 * get_line
 * utility to safely read from a stream into a buffer with a max size
