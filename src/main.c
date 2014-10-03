@@ -2,51 +2,52 @@
 
 int main (int argc, char **argv){
 	char c;
-	int port=0, server=0, daemon=0;
+	int port = DEFAULT_PORT, server = FALSE, daemon = FALSE;
 	char host[80];
 	char command[BUF_LENGTH];
 	int b_command = 0, b_host = 0;
 	
-	while ((c = getopt (argc, argv, "dsa:p:c:")) != -1){
+	while ((c = getopt (argc, argv, "dsa:p")) != -1){
 		switch (c){
 			//client switches
 			case 'p':
 				port= atoi(optarg);
 			break;
 			case 'a':
-				strncpy(host, optarg,79); 
+				strncpy(host, optarg, 79); 
 				b_host = 1;
 			break;
-			case 'c':
-				strncpy(command, optarg, BUF_LENGTH -1); 
-				b_command = 1;
-			break;
+			//case 'c':
+			//	strncpy(command, optarg, BUF_LENGTH - 1); 
+			//	b_command = 1;
+			//break;
 			//server switches
 			case 's':
-				server = 1;
+				server = TRUE;
 			break;
 			case 'd':
-				daemon = 1;
-			break;
-			
+				daemon = TRUE;
+			break;			
 			case '?':
 			default:
-				usage();
+				usage(argv[0]);
 				return 1;
 		}
 	}
 	
-	if(server == 0){
-		if(b_command==0 || b_host == 0){
-			usage();
+	if(server == FALSE){
+		if(b_command == FALSE || b_host == FALSE){
+			usage(argv[0]);
 		}
-		if(port ==0){
-			srand (time(NULL));
-			port = rand()%1000+1025 ;
-		}
+		//if(port == 0){
+			//srand (time(NULL));
+			//port = rand() % 1000 + 1025;
+		//}
 		startClient(host, port, command);
 		
-	} else {
+	} 
+	else 
+	{
 		//rename program
 		//rename(argv);
 		//initServer();

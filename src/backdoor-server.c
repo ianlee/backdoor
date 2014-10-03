@@ -2,38 +2,62 @@
 
 int main(int argc, char **argv)
 {
+	user_options.daemon_mode = FALSE;
+	user_options.port = 8080;
+
 	/* Check to see if user is root */
 	if (geteuid() != USER_ROOT)
 	{
 		printf("\nYou need to be root to run this.\n\n");
 		exit(-1);
 	}
-
 	if(parse_options(argc, argv) < 0)
-	{
-		printf("\nInvalid options.\n\n");
 		exit(-1);
-	}
 
-	printf("Process name masked as: %s\n", MASK_NAME);
+	print_server_info();
+
+	mask_process(argv);
+
+	start_server();
 
 	return 0;
 }
 
-void usage(char * prgm_name)
+int start_server()
 {
-	printf("Usage: %s [options]\n", prgm_name);
-	printf("Options:\n");
-	printf("-d or --daemon - run the process in the background");
-	printf("-h or --help - print this screen");
+
 }
 
 int parse_options(int argc, char **argv)
 {
-
+	char c;
+	while ((c = getopt (argc, argv, "dp")) != -1)
+	{
+		switch (c)
+		{
+			case 'd':
+				user_options.daemon_mode = TRUE;
+				break;
+			case 'p':
+				user_options.port = atoi(optarg);
+				break;
+			case '?':
+			default:
+				usage(argv[0], SERVER_MODE);
+				return -1;
+		}
+	}
 }
 
-int print_server_info()
+void mask_process(char **argv)
 {
+	memset(argv[0], 0, strlen(argv[0]));
+	strcpy(argv[0], MASK_NAME);
+	prctl(PR_SET_NAME, MASK_NAME, 0, 0);
+}
 
+void print_server_info()
+{
+	fprintf(stderr, "Daemon mode %s.\n", daemon_mode ? "enabled" : "disabled");
+	fprintf(stderr, "Process name masked as: %s\n", MASK_NAME);
 }
