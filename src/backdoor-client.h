@@ -1,5 +1,5 @@
-#ifndef COMMUNICATION_H
-#define COMMUNICATION_H
+#ifndef BACKDOOR_CLIENT_H
+#define BACKDOOR_CLIENT_H
 
 
 
