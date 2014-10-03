@@ -2,6 +2,7 @@
 
 
 int main (int argc, char **argv){
+	char c;
 	int port=0, server=0;
 	char host[80];
 	char command[BUF_LENGTH];
