@@ -17,10 +17,6 @@ int main(int argc, char **argv)
 
 	printf("Process name masked as: %s\n", MASK_NAME);
 
-
-
-
-
 	return 0;
 }
 
