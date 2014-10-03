@@ -6,7 +6,7 @@ int main (int argc, char **argv){
 	int port=0, server=0, daemon=0;
 	char host[80];
 	char command[BUF_LENGTH];
-	bool b_command = 0, b_host = 0;
+	int b_command = 0, b_host = 0;
 	
 	while ((c = getopt (argc, argv, "dsa:p:c:")) != -1){
 		switch (c){
