@@ -9,6 +9,9 @@ int startPacketCapture(){
 int stopPacketCapture(){
 	return 0;
 }
+int sendPacket(char* host, int port, char* command){
+	return 0;
+}
 
 
 int startClient( char* host, int port){
