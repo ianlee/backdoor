@@ -7,7 +7,7 @@
 #define PKT_SIZE 1500
 #define BUFFER 100
 
-int startPacketCapture();
-int stopPacketCapture();
+int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int port);
+int stopPacketCapture(pcap_t * nic_descr, struct bpf_program fp);
 
 #endif

