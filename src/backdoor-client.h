@@ -9,6 +9,6 @@
 #define BUF_LENGTH 300
 
 
-int startClient( char* host, int port);
+int startClient( char* host, int port, char* command);
 
 #endif

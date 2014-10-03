@@ -6,5 +6,11 @@
 #include "utils.h"
 #include "pktcap.h"
 
+//remove on production
+#ifndef DEBUG
+#define DEBUG
+#endif
+
+
 
 #endif
