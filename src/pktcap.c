@@ -2,16 +2,16 @@
 
 int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int port){
 	
-	char nic_dev[BUFFER];			// NIC device name to monitor
-	pcap_if_t *alldevs, *temp; 		// NIC list variables
-    char errbuf[PCAP_ERRBUF_SIZE]; 	// error buffer
-    bpf_u_int32 maskp;          	// subnet mask               
-    bpf_u_int32 netp;           	// ip 
-    char filter_exp[BUFFER];		// filter expression
+	char nic_dev[BUFFER];		// NIC device name to monitor
+	pcap_if_t *alldevs, *temp; 	// NIC list variables
+    	char errbuf[PCAP_ERRBUF_SIZE]; 	// error buffer
+    	bpf_u_int32 maskp;          	// subnet mask               
+    	bpf_u_int32 netp;           	// ip 
+    	char filter_exp[BUFFER];	// filter expression
 	
     
-    /* Get all network interfaces */
-    if(pcap_findalldevs (&alldevs, errbuf) == -1)
+    	/* Get all network interfaces */
+    	if(pcap_findalldevs (&alldevs, errbuf) == -1)
 	{
 		fprintf(stderr, "Error finding all devs: %s\n", errbuf);
 		exit(1);
@@ -60,5 +60,5 @@ int stopPacketCapture(pcap_t * nic_descr, struct bpf_program fp){
 
 void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const u_char* packet)
 {
-	
+
 }
