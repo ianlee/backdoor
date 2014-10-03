@@ -14,6 +14,6 @@ char *get_line (char *s, size_t n, FILE *f)
 }
 
 void usage(){
-	fprintf(stderr, "Usage: %s \n", argv[0]);
+	fprintf(stderr, "Usage: [-s -d] [-a host] [-p port] [-c command] \n");
 	exit(1);
 }
