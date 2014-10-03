@@ -25,6 +25,6 @@ pktcap.o: pktcap.h pktcap.c
 	${CC} ${CFLAGS} -c pktcap.c
 clean:
 	rm -rf *.o *.c~ *.cpp~ *.h~ ${OUT_DIR}/backdoor
-directories: ${OUT_DIR}
+directories: 
 	${MKDIR_P} ${OUT_DIR}/
 
