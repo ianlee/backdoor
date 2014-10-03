@@ -12,13 +12,13 @@ int main (int argc, char **argv){
 				port= atoi(optarg);
 			break;
 			case 'a':
-				host = optarg; //probably need to use strcpy
+				strncpy(host, optarg,79); //probably need to use strcpy
 			break;
 			case 's':
 				server = 1;
 			break;
 			case 'c':
-				command = optarg; //probably need to use strcpy
+				strncpy(command, optarg, BUF_LENGTH -1); //probably need to use strcpy
 			
 			case '?':
 			default:
