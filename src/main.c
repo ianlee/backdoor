@@ -20,7 +20,7 @@ int main (int argc, char **argv){
 			break;
 			case 'c':
 				strncpy(command, optarg, BUF_LENGTH -1); //probably need to use strcpy
-			
+			break;
 			case '?':
 			default:
 				fprintf(stderr, "Usage: %s \n", argv[0]);
