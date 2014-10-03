@@ -1,10 +1,10 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "cleanup.h"
-#include "communication.h"
-#include "doorman.h"
-#include "exec.h"
+#include "backdoor-client.h"
+#include "backdoor-server.h"
+#include "utils.h"
+#include "pktcap.h"
 
 
 #endif

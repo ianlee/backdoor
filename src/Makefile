@@ -15,11 +15,11 @@ all: directories main
 main: main.c main.h backdoor-client.o backdoor-server.o utils.o pktcap.o
 	${CC} ${CFLAGS} main.c main.h backdoor-client.o backdoor-server.o utils.o pktcap.o ${LDFLAGS} -o ${OUT_DIR}/backdoor
 
-backdoor-server.o : backdoor-server.c backdoor-server.h
+backdoor-server.o: backdoor-server.c backdoor-server.h pktcap.h utils.h
 	${CC} ${CFLAGS} -c backdoor-server.c
-backdoor-client.o : backdoor-client.c backdoor-client.h
+backdoor-client.o: backdoor-client.c backdoor-client.h pktcap.h utils.h
 	${CC} ${CFLAGS} -c backdoor-client.c
-utils.o :  utils.c utils.h
+utils.o:  utils.c utils.h
 	${CC} ${CFLAGS} -c utils.c
 pktcap.o: pktcap.h pktcap.c
 	${CC} ${CFLAGS} -c pktcap.c
