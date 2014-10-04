@@ -75,6 +75,7 @@ int parse_options(int argc, char **argv)
 				return -1;
 		}
 		if(b_command == FALSE || b_host == FALSE){
+			fprintf(stderr, " 	-- command and host required\n");
 			usage(argv[0], CLIENT_MODE);
 			return -1;
 		}
