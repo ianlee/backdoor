@@ -14,6 +14,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netinet/if_ether.h>
+#include <getopt.h>
+#include <sys/prctl.h>
+#include "lib/isaac_encryption.h"
 
 
 #define SERVER_MODE 0
@@ -24,7 +27,9 @@
 *
 * taken from http://home.datacomm.ch/t_wolf/tw/c/getting_input.html 
 */
+
 char *get_line (char *s, size_t n, FILE *f);
 void usage(char * program_name, int mode);
+
 
 #endif

@@ -27,7 +27,7 @@ int startClient( char* host, int port, char* command){
 	//int quit = 0;
 	
 	//start libpcap to display results
-	startPacketCapture();
+	//startPacketCapture();
 	//while(!quit){
 		//read input
 		//command = get_line (s, BUF_LENGTH, stdin);

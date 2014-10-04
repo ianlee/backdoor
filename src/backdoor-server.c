@@ -25,11 +25,13 @@ int main(int argc, char **argv)
 
 int start_server()
 {
-	pcap_t * nic_handle;
+	pcap_t * nic_handle = NULL;
 	struct bpf_program fp;
 
 	startPacketCapture(nic_handle, fp, user_options.port);
 	stopPacketCapture(nic_handle, fp);
+
+	return 0;
 }
 
 int parse_options(int argc, char **argv)
@@ -51,6 +53,7 @@ int parse_options(int argc, char **argv)
 				return -1;
 		}
 	}
+	return 0;
 }
 
 void mask_process(char **argv)
@@ -62,6 +65,6 @@ void mask_process(char **argv)
 
 void print_server_info()
 {
-	fprintf(stderr, "Daemon mode %s.\n", daemon_mode ? "enabled" : "disabled");
+	fprintf(stderr, "Daemon mode %s.\n", user_options.daemon_mode ? "enabled" : "disabled");
 	fprintf(stderr, "Process name masked as: %s\n", MASK_NAME);
 }

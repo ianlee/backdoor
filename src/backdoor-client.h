@@ -7,6 +7,7 @@
 #define TRUE 1
 #define FALSE 0
 #define DEFAULT_PORT 8080
+#define USER_ROOT 0
 
 int startClient( char* host, int port, char* command);
 

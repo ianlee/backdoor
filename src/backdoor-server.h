@@ -8,17 +8,18 @@
 #define DEFAULT_PORT 8080
 #define TRUE 1
 #define FALSE 0
-#define PASSWORD "uest1onQ?"
+#define USER_ROOT 0
 
 struct options
 {
 	int daemon_mode;
 	int port;
+
 } user_options;
 
 int start_server();
-int daemon_parse_option(int argc, char **argv);
-int print_server_info();
+int parse_options(int argc, char **argv);
+void print_server_info();
 void mask_process(char **argv);
 
 #endif

