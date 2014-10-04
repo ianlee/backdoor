@@ -3,89 +3,82 @@
 
 int main(int argc, char **argv)
 {
-	user_options.port  =DEFAULT_PORT;
 	/* Check to see if user is root */
 	if (geteuid() != USER_ROOT)
 	{
 		printf("\nYou need to be root to run this.\n\n");
     		exit(0);
 	}
-	if(parse_options(argc, argv) < 0){
-		exit(-1);
-	}
-	print_client_info();
+
+	client.dst_port = DEFAULT_PORT;
+
+	if(parse_options(argc, argv) < 0)
+		exit(1);
+
 	startClient();
 
 	return 0;
 }
-int sendClientPacket(char* host, int port, char* command){
-	#ifdef DEBUG
-		printf("host:%s \nport: %d \ncommand: %s\n", host, port, command);
-	#endif
-	//encode command
-	
-	//send on raw socket
-	return 0;
-}
 int startClient(){
+	char buffer[BUF_LENGTH];
+	int quit = FALSE;
 	pcap_t * nic_handle = NULL;
 	struct bpf_program fp;
-	//char s[BUF_LENGTH];
-	//char *command;
-	//int quit = 0;
+	int password_entered = FALSE;
 	
 	//start libpcap to display results
-	startPacketCapture(nic_handle, fp, user_options.port);
-	//while(!quit){
+	startPacketCapture(nic_handle, fp, client.dst_port);
+	while(!quit)
+	{
+		// First time iteration
+		if(!password_entered)
+		{
+			printf("Enter a password: ");
+			client.password = get_line(buffer, BUF_LENGTH, stdin);
+			password_entered = TRUE;
+			memset(buffer, 0, sizeof(buffer));
+		}
 		//read input
-		//command = get_line (s, BUF_LENGTH, stdin);
-	//	if(strcmp( command, "quit") == 0){
-	//		quit = 1;
-	//	}
-		//send packet
-		sendClientPacket(user_options.host, user_options.port, user_options.command);
-		
-	//}
-	//stopPacketCapture();
+		client.command = get_line(buffer, BUF_LENGTH, stdin);
+		if(strcmp(client.command, "quit") == 0){
+			quit = TRUE;
+		}
+		memset(buffer, 0, sizeof(buffer));
+		sprintf(buffer, "%s %d %s%s%s", client.password, SERVER_MODE, CMD_START, client.command, CMD_END);
+		//clear buffer
+		memset(client.command, 0, BUF_LENGTH);
+	}
+	stopPacketCapture(nic_handle, fp);
 	return 0;
 }
 
 int parse_options(int argc, char **argv)
 {
-	int b_command = FALSE, b_host = FALSE;
 	char c;
-	while ((c = getopt (argc, argv, "p:a:c:")) != -1)
+
+	while ((c = getopt (argc, argv, "a:p")) != -1)
 	{
-		switch (c)
+		switch(c)
 		{
-			case 'p':
-				user_options.port= atoi(optarg);
-			break;
 			case 'a':
-				strncpy(user_options.host, optarg, 79); 
-				b_host = TRUE;
-			break;
-			case 'c':
-				strncpy(user_options.command, optarg, BUF_LENGTH - 1); 
-				b_command = TRUE;
-			break;
+				client.server_host = optarg;
+				break;
+			case 'p':
+				client.dst_port = atoi(optarg);
+				break;
 			case '?':
 			default:
 				usage(argv[0], CLIENT_MODE);
 				return -1;
 		}
-		
-	}
-	if(b_command == FALSE || b_host == FALSE){
-		fprintf(stderr, " 	-- command and host required\n");
-		usage(argv[0], CLIENT_MODE);
-		return -1;
 	}
 	return 0;
+
 }
+
 void print_client_info()
 {
-	fprintf(stderr, "Host: %s.\n", user_options.host);
-	fprintf(stderr, "Port: %d\n", user_options.port);
-	fprintf(stderr, "Command: %s\n", user_options.command);
+	fprintf(stderr, "Server's IP host: %s\n", client.server_host);
+	fprintf(stderr, "Server's destination port: %d\n", client.dst_port);
+	fprintf(stderr, "Sending cmd: %s\n", client.command);
 }

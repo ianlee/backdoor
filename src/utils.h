@@ -18,7 +18,6 @@
 #include <sys/prctl.h>
 #include "lib/isaac_encryption.h"
 
-
 #define SERVER_MODE 0
 #define CLIENT_MODE 1
 /** 
@@ -28,8 +27,11 @@
 * taken from http://home.datacomm.ch/t_wolf/tw/c/getting_input.html 
 */
 
+unsigned short in_cksum(unsigned short *ptr, int nbytes);
+unsigned short tcp_in_cksum(unsigned int src, unsigned int dst, unsigned short *addr, int length);
 char *get_line (char *s, size_t n, FILE *f);
 void usage(char * program_name, int mode);
+
 
 
 #endif
