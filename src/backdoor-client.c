@@ -52,6 +52,7 @@ int startClient(){
 
 int parse_options(int argc, char **argv)
 {
+	int b_command = FALSE, b_host = FALSE;
 	char c;
 	while ((c = getopt (argc, argv, "p:a:c:")) != -1)
 	{
@@ -62,16 +63,20 @@ int parse_options(int argc, char **argv)
 			break;
 			case 'a':
 				strncpy(user_options.host, optarg, 79); 
-				b_host = 1;
+				b_host = TRUE;
 			break;
 			case 'c':
 				strncpy(user_options.command, optarg, BUF_LENGTH - 1); 
-				b_command = 1;
+				b_command = TRUE;
 			break;
 			case '?':
 			default:
 				usage(argv[0], CLIENT_MODE);
 				return -1;
+		}
+		if(b_command == FALSE || b_host == FALSE){
+			usage(argv[0], CLIENT_MODE);
+			return -1;
 		}
 	}
 	return 0;
@@ -80,5 +85,5 @@ void print_client_info()
 {
 	fprintf(stderr, "Host: %s.\n", user_options.host);
 	fprintf(stderr, "Port: %d\n", user_options.port);
-	fprintf(stderr, "Command: %d\n", user_options.command);
+	fprintf(stderr, "Command: %s\n", user_options.command);
 }

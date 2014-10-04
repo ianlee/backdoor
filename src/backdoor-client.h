@@ -17,6 +17,9 @@ struct options
 
 } user_options;
 
-int startClient( char* host, int port, char* command);
+int startClient();
+void print_client_info();
+int parse_options(int argc, char **argv);
+int sendClientPacket(char* host, int port, char* command);
 
 #endif
