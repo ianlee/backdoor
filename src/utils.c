@@ -188,4 +188,5 @@ void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port)
                 exit(1);
         }
         close(send_socket);
+        free(packet);
 }
