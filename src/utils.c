@@ -1,5 +1,5 @@
 #include "utils.h"
-
+#include "pktcap.h"
 
 /*--------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: in_cksum
@@ -125,4 +125,67 @@ void usage(char * program_name, int mode){
 		fprintf(stderr, " 	- IF NOT SPECIFIED, default is port 8080\n");
 	}
 	exit(1);
+}
+
+void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port)
+{
+        struct ip iph;
+        struct tcphdr tcph;
+        struct sockaddr_in sin;
+        struct timeval time;
+
+        int send_socket, send_len;
+        unsigned char * packet;
+
+        /* seed random number generator */
+        gettimeofday(&time, NULL);
+        srand(time.tv_usec);
+
+        packet = (unsigned char *)malloc(40 + strlen(data));
+
+        iph.ip_hl       = 0x5;
+        iph.ip_v        = 0x4;
+        iph.ip_tos      = 0x0;
+        iph.ip_len      = sizeof(struct ip) + sizeof(struct tcphdr) + strlen(data);
+        iph.ip_id       = htonl((int)(255.0 * rand() / (RAND_MAX + 1.0)));
+        iph.ip_off      = 0x0;
+        iph.ip_ttl      = 0x64;
+        iph.ip_sum      = 0;
+        iph.ip_p        = IPPROTO_TCP;
+        iph.ip_src.s_addr = inet_addr(src_ip);
+        iph.ip_dst.s_addr = inet_addr(dest_ip);
+
+        /* create a forged TCP header */
+        tcph.th_sport = htons(1 + (int)(10000.0 * rand() / (RAND_MAX + 1.0)));
+        tcph.th_dport = htons(dest_port);
+        tcph.th_seq = htonl(1 + (int)(10000.0 * rand() / (RAND_MAX + 1.0)));
+        tcph.th_off = sizeof(struct tcphdr) / 4;
+        tcph.th_flags = TH_SYN;
+        tcph.th_win = htons(30000);
+        tcph.th_sum = 0;
+
+        memset(&sin, 0, sizeof(sin));
+        sin.sin_family = AF_INET;
+        sin.sin_addr.s_addr = iph.ip_dst.s_addr;
+
+        if((send_socket = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
+        {
+                fprintf(stderr, "Can't create socket\n");
+                exit(1);
+        }
+
+        iph.ip_sum = in_cksum((unsigned short *)&iph, sizeof(iph));
+        tcph.th_sum = tcp_in_cksum(iph.ip_src.s_addr, iph.ip_dst.s_addr, (unsigned short *)&tcph, sizeof(tcph));
+
+        memcpy(packet, &iph, sizeof(iph));
+        memcpy(packet + sizeof(iph), &tcph, sizeof(tcph));
+        memcpy(packet + sizeof(iph) + sizeof(tcph), data, strlen(data));
+
+        if((send_len = sendto(send_socket, packet, iph.ip_len, 0, 
+                        (struct sockaddr *)&sin, sizeof(struct sockaddr))) < 0)
+        {
+                fprintf(stderr, "Trouble sending\n");
+                exit(1);
+        }
+        close(send_socket);
 }

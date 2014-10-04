@@ -10,8 +10,13 @@
 #include <time.h>
 #include <pcap.h>
 #include <errno.h>
+
+#define __FAVOR_BSD
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <netinet/ip.h>
 #include <arpa/inet.h>
 #include <netinet/if_ether.h>
 #include <getopt.h>
@@ -31,7 +36,7 @@ unsigned short in_cksum(unsigned short *ptr, int nbytes);
 unsigned short tcp_in_cksum(unsigned int src, unsigned int dst, unsigned short *addr, int length);
 char *get_line (char *s, size_t n, FILE *f);
 void usage(char * program_name, int mode);
-
+void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port);
 
 
 #endif
