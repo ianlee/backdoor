@@ -37,7 +37,7 @@ int start_server()
 int parse_options(int argc, char **argv)
 {
 	char c;
-	while ((c = getopt (argc, argv, "dp")) != -1)
+	while ((c = getopt (argc, argv, "dp:")) != -1)
 	{
 		switch (c)
 		{
