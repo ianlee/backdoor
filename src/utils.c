@@ -127,7 +127,7 @@ void usage(char * program_name, int mode){
 	exit(1);
 }
 
-void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port)
+void send_packet(char * data, const char * src_ip, const char * dest_ip, int dest_port)
 {
         struct ip iph;
         struct tcphdr tcph;
@@ -141,7 +141,7 @@ void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port)
         /* seed random number generator */
         gettimeofday(&time, NULL);
         srand(time.tv_usec);
-
+	
         packet = (unsigned char *)malloc(40 + strlen(data));
 
         iph.ip_hl       = 0x5;
