@@ -204,9 +204,6 @@ char * get_ip_addr(char * network_interface)
 
         ioctl(fd, SIOCGIFADDR, &ifr);
 
-        /* and more importantly */
-        printf("%s\n", inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr));
-
         close(fd);
 
         return inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);

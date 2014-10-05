@@ -15,8 +15,8 @@ struct client
 {
 	char * 	server_host;
 	int	dst_port;
-	char * 	command;
-	char *	password;
+	char 	command[BUF_LENGTH];
+	char 	password[BUF_LENGTH];
 
 } client;
 

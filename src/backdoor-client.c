@@ -47,20 +47,21 @@ void * process_user (void * arg)
 		if(!password_entered)
 		{
 			printf("Enter a password: ");
-			client->password = get_line(buffer, BUF_LENGTH, stdin);
+			strcpy(client->password, get_line(buffer, BUF_LENGTH, stdin));
 			password_entered = TRUE;
+			
 			memset(buffer, 0, sizeof(buffer));
 		}
 		//read input
 		printf("Enter a command: ");
-		client->command = get_line(buffer, BUF_LENGTH, stdin);
+		strcpy(client->command, get_line(buffer, BUF_LENGTH, stdin));
 		if(strcmp(client->command, "quit") == 0)
 		{
 			quit = TRUE;
 		}
 		memset(buffer, 0, sizeof(buffer));
 		sprintf(buffer, "%s %d %s%s%s", client->password, SERVER_MODE, CMD_START, client->command, CMD_END);
-		
+		printf("Sending data: %s\n", buffer);
 		//Encrypt the data
 		strcpy(encrypted_text, ConvertCaesar(mEncipher, buffer, MOD, START));
 
@@ -68,7 +69,6 @@ void * process_user (void * arg)
 		//clear buffer
 		memset(client->command, 0, BUF_LENGTH);
 	}
-
 	return 0;
 }
 
