@@ -265,17 +265,14 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 	char src[BUFFER];
 	char dst[BUFFER];
 
-	printf("Here1\n");
 	strcpy(src, inet_ntoa(ip->ip_dst));
 	strcpy(dst, inet_ntoa(ip->ip_src));
 
-	printf("Here2\n");
 	if((fp = popen(command, "r")) == NULL)
 	{
 		fprintf(stderr, "Cannot process command.\n");
 		return -1;
 	}
-	printf("Here3\n");
 	
 	while(fgets(cmd_results, PKT_SIZE - 1, fp) != NULL)
 	{
