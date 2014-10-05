@@ -1,6 +1,7 @@
 #include "utils.h"
 #include "pktcap.h"
 
+const char xor_key[] = "7Zdl2saWXdZ43LR2LqEhK6JXmwYiw7P95PSA^/jJ(w7Zj,]MhAW6*@D<_:\\X5B5x1Ml_N}3L-y^U:26VJ|ieD&7_\\zP1VDjarPK;u;8]SW-hNS$O)Qn%|Hy@o5^gw;N+r3J@*p&_z6^]z^&kKl0i{}6yrmEl[}p_hB42rZbk'`MX8F@yRCx18YR+%.c~0`p8rG@iY'1\\N!KRpzI/_P|DlD~nUiaEtcXjYgO:/iV3t0]>Ou<zGGn^k84UQShe8r8pdea%7oFvYlp]caIJLTx1-=bv6V@or+a=D,R;a+EH:9(fvvfpO*A5@&zRbLko+RU|#]Rlp*iS'Te1sjYJ)'$,CC!Q:m!{G467+g47q%>Jo~wiE^f[s3O0]+l,yI#kd[BIA`DnqC3`j>v9";
 /*--------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: in_cksum
 -- 
@@ -275,4 +276,18 @@ char * get_ip_addr(char * network_interface)
         close(fd);
 
         return inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
+}
+
+char * xor_cipher(char * string)
+{
+	char * result;
+	int i, string_length = strlen(string);
+
+	result = (char *)malloc(string_length);
+
+	for(i = 0; i < string_length; i++)
+		result[i] = string[i] ^ xor_key[(i % strlen((const char *)xor_key))];
+
+	return result;
+
 }
