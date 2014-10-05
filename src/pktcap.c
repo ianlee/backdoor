@@ -44,7 +44,8 @@ int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int dst, char 
 	if(dst == FROM_CLIENT)
 		sprintf(filter_exp, "tcp and dst port %d", port);
 	if(dst == FROM_SERVER)	
-		sprintf(filter_exp, "tcp and src host %s", src_host);	
+		sprintf(filter_exp, "tcp and src port %d", port);
+		//sprintf(filter_exp, "tcp and src host %s", src_host);	
 	
 	if(pcap_compile(nic_descr, &fp, filter_exp, 0, netp))
 	{
