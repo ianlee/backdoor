@@ -96,8 +96,8 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	}
 
 	/* print source and destination IP addresses */
-	printf("       From: %s\n", inet_ntoa(ip->ip_src));
-	printf("         To: %s\n", inet_ntoa(ip->ip_dst));
+	//printf("       From: %s\n", inet_ntoa(ip->ip_src));
+	//printf("         To: %s\n", inet_ntoa(ip->ip_dst));
 
 	if(ip->ip_p != IPPROTO_TCP)
 		return;
@@ -116,7 +116,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	
 	/* compute tcp payload (segment) size */
 	size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
-	printf("Size of payload: %d\n", size_payload);
+
 	/* Decrypt the payload */
 	strcpy(decrypted, ConvertCaesar(mDecipher, (char *) payload, MOD, START));
 
@@ -126,7 +126,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 		fprintf(stderr, "scanning error\n");
 		return;
 	}
-	printf("Decrypted Packet: %s\n", decrypted);
+	//printf("Decrypted Packet: %s\n", decrypted);
 	command = parse_cmd(decrypted);
 
 	if(mode == SERVER_MODE && (strcmp(password, PASSWORD) == 0))
@@ -138,7 +138,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	}
 	else if (mode == CLIENT_MODE)
 	{
-		printf("%s", command);
+		printf("%s\n", command);
 		free(command);
 		return;
 	}

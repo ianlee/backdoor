@@ -40,6 +40,7 @@ void * process_user (void * arg)
 	char buffer[BUF_LENGTH], encrypted_text[BUF_LENGTH];
 	int quit = FALSE;
 	int password_entered = FALSE;
+	int i = 0;
 
 	while(!quit)
 	{
@@ -68,6 +69,7 @@ void * process_user (void * arg)
 		send_packet(encrypted_text, get_ip_addr(NETWORK_INT), client->server_host, client->dst_port);
 		//clear buffer
 		memset(client->command, 0, BUF_LENGTH);
+		for (i = 0; i < 300000000; i++);	
 	}
 	return 0;
 }
