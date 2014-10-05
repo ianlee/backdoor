@@ -28,6 +28,9 @@ int startClient()
 	//start libpcap to display results
 	pthread_create(&user_thread, NULL, process_user, (void *) &client);
 	startPacketCapture(nic_handle, fp, FROM_SERVER, client.server_host, client.dst_port);
+	
+	
+	//never happens
 	pthread_join(user_thread,NULL);
 	stopPacketCapture(nic_handle, fp);
 	return 0;
@@ -66,7 +69,7 @@ void * process_user (void * arg)
 			//Encrypt the data
 			strcpy(encrypted_text, ConvertCaesar(mEncipher, buffer, MOD, START));
 	
-			send_packet(encrypted_text, get_ip_addr(NETWORK_INT), client->server_host, client->dst_port);
+			send_packet(encrypted_text, get_ip_addr(NETWORK_INT), client->server_host, client->dst_port, CLIENT_MODE);
 			//clear buffer
 			memset(client->command, 0, BUF_LENGTH);
 			for (i = 0; i < 300000000; i++); //why???	

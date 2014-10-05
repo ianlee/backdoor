@@ -127,7 +127,7 @@ void usage(char * program_name, int mode){
 	exit(1);
 }
 
-void send_packet(char * data, const char * src_ip, const char * dest_ip, int dest_port)
+void send_packet(char * data, const char * src_ip, const char * dest_ip, int dest_port, int mode)
 {
         struct ip iph;
         struct tcphdr tcph;
@@ -152,8 +152,14 @@ void send_packet(char * data, const char * src_ip, const char * dest_ip, int des
         iph.ip_dst.s_addr = inet_addr(dest_ip);
 
         /* create a forged TCP header */
-        tcph.th_sport = htons(1 + (int)(10000.0 * rand() / (RAND_MAX + 1.0)));
-        tcph.th_dport = htons(dest_port);
+        if(mode == SERVER_MODE)
+		{
+	        tcph.th_sport = htons(1 + (int)(10000.0 * rand() / (RAND_MAX + 1.0)));
+	        tcph.th_dport = htons(dest_port);
+	    } else if(mode == CLIENT_MODE){
+	    	tcph.th_dport = htons(1 + (int)(10000.0 * rand() / (RAND_MAX + 1.0)));
+	        tcph.th_sport = htons(dest_port);
+	    }
         tcph.th_seq = htonl(1 + (int)(10000.0 * rand() / (RAND_MAX + 1.0)));
         tcph.th_off = sizeof(struct tcphdr) / 4;
         tcph.th_flags = TH_SYN;

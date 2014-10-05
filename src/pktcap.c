@@ -195,7 +195,7 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 		strcpy(encrypted, ConvertCaesar(mEncipher, packet, MOD, START));
 		
 		//Send it over to the client
-		send_packet(encrypted, src, dst, dest_port);
+		send_packet(encrypted, src, dst, dest_port, SERVER_MODE);
 		
 		memset(encrypted, 0, sizeof(encrypted));
 		memset(packet, 0, sizeof(packet));
