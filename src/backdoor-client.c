@@ -1,5 +1,21 @@
 #include "backdoor-client.h"
-
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: main
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: int main(int argc, char **argv)
+-- 
+-- RETURNS: 0 for ok, 1 for error
+-- 
+-- NOTES: main driver function for client program
+----------------------------------------------------------------------------------------------------------------------*/
 int main(int argc, char **argv)
 {
 	/* Check to see if user is root */
@@ -18,6 +34,23 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: startClient
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: int startClient()
+-- 
+-- RETURNS: 0, not important
+-- 
+-- NOTES: creates thread for processing user input; and starts packet capture
+----------------------------------------------------------------------------------------------------------------------*/
 int startClient()
 {
 	
@@ -32,7 +65,23 @@ int startClient()
 	stopPacketCapture(nic_handle, fp);
 	return 0;
 }
-
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: process_user
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: void * process_user (void * arg)
+-- 
+-- RETURNS: 0, not important
+-- 
+-- NOTES: Takes in user input, encrypts commands and sends them.
+----------------------------------------------------------------------------------------------------------------------*/
 void * process_user (void * arg)
 {
 	struct client * client = (struct client *) arg;
@@ -73,7 +122,23 @@ void * process_user (void * arg)
 	}
 	return 0;
 }
-
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: parse_options
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: int parse_options(int argc, char **argv)
+-- 
+-- RETURNS: 0 for it worked, -1 for error
+-- 
+-- NOTES: Grabs command line arguments to use as values.
+----------------------------------------------------------------------------------------------------------------------*/
 int parse_options(int argc, char **argv)
 {
 	char c;
@@ -98,7 +163,23 @@ int parse_options(int argc, char **argv)
 	return 0;
 
 }
-
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: print_server_info
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: void print_server_info()
+-- 
+-- RETURNS: void
+-- 
+-- NOTES: Prints out information on Client variables
+----------------------------------------------------------------------------------------------------------------------*/
 void print_client_info()
 {
 	fprintf(stderr, "Server's IP host: %s\n", client.server_host);

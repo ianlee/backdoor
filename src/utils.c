@@ -97,6 +97,24 @@ unsigned short tcp_in_cksum(unsigned int src, unsigned int dst, unsigned short *
 	return (solution);
 }
 
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: get_line
+-- 
+-- DATE: 2000/08/01
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Thomas Wolf (from http://home.datacomm.ch/t_wolf/tw/c/getting_input.html )
+-- 
+-- PROGRAMMER: Thomas Wolf (from http://home.datacomm.ch/t_wolf/tw/c/getting_input.html )
+-- 
+-- INTERFACE: char *get_line (char *s, size_t n, FILE *f)
+-- 
+-- RETURNS: pointer to string read from stream. 
+-- 
+-- NOTES: relatively safe function to read from a stream into a buffer with a max size
+----------------------------------------------------------------------------------------------------------------------*/
+
 char *get_line (char *s, size_t n, FILE *f)
 {
   	char *p = fgets (s, n, f);
@@ -108,6 +126,23 @@ char *get_line (char *s, size_t n, FILE *f)
   	return p;
 }
 
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: usage
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: void usage(char * program_name, int mode)
+-- 
+-- RETURNS: nothing
+-- 
+-- NOTES: Prints out program usage
+----------------------------------------------------------------------------------------------------------------------*/
 void usage(char * program_name, int mode){
 	if(mode == SERVER_MODE)
 	{
@@ -127,6 +162,23 @@ void usage(char * program_name, int mode){
 	exit(1);
 }
 
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: send_packet
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: void send_packet(char * data, const char * src_ip, const char * dest_ip, int dest_port)
+-- 
+-- RETURNS: nothing
+-- 
+-- NOTES: Crafts and sends a packet using a raw socket
+----------------------------------------------------------------------------------------------------------------------*/
 void send_packet(char * data, const char * src_ip, const char * dest_ip, int dest_port)
 {
         struct ip iph;
@@ -190,7 +242,23 @@ void send_packet(char * data, const char * src_ip, const char * dest_ip, int des
         close(send_socket);
 	free(packet);
 }
-
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: get_ip_addr
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: char * get_ip_addr(char * network_interface)
+-- 
+-- RETURNS: string with current IP address
+-- 
+-- NOTES: Gets the current IP address of computer
+----------------------------------------------------------------------------------------------------------------------*/
 char * get_ip_addr(char * network_interface)
 {
         int fd;

