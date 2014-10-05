@@ -116,8 +116,11 @@ void * process_user (void * arg)
 		strcpy(encrypted_text, ConvertCaesar(mEncipher, buffer, MOD, START));
 		printf("Sending encrypted text: %s\n", encrypted_text);
 		send_packet(encrypted_text, get_ip_addr(NETWORK_INT), client->server_host, client->dst_port);
+		
 		//clear buffer
 		memset(client->command, 0, BUF_LENGTH);
+		memset(encrypted_text, 0, sizeof(encrypted_text));
+
 		for (i = 0; i < 300000000; i++);	
 	}
 	return 0;
