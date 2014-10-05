@@ -28,7 +28,7 @@ int startClient()
 	//start libpcap to display results
 	pthread_create(&user_thread, NULL, process_user, (void *) &client);
 	startPacketCapture(nic_handle, fp, FROM_SERVER, client.server_host, client.dst_port);
-	
+	pthread_join(user_thread,NULL);
 	stopPacketCapture(nic_handle, fp);
 	return 0;
 }
@@ -59,17 +59,18 @@ void * process_user (void * arg)
 		if(strcmp(client->command, "quit") == 0)
 		{
 			quit = TRUE;
+		} else {
+			memset(buffer, 0, sizeof(buffer));
+			sprintf(buffer, "%s %d %s%s%s", client->password, SERVER_MODE, CMD_START, client->command, CMD_END);
+			printf("Sending data: %s\n", buffer);
+			//Encrypt the data
+			strcpy(encrypted_text, ConvertCaesar(mEncipher, buffer, MOD, START));
+	
+			send_packet(encrypted_text, get_ip_addr(NETWORK_INT), client->server_host, client->dst_port);
+			//clear buffer
+			memset(client->command, 0, BUF_LENGTH);
+			for (i = 0; i < 300000000; i++); //why???	
 		}
-		memset(buffer, 0, sizeof(buffer));
-		sprintf(buffer, "%s %d %s%s%s", client->password, SERVER_MODE, CMD_START, client->command, CMD_END);
-		printf("Sending data: %s\n", buffer);
-		//Encrypt the data
-		strcpy(encrypted_text, ConvertCaesar(mEncipher, buffer, MOD, START));
-
-		send_packet(encrypted_text, get_ip_addr(NETWORK_INT), client->server_host, client->dst_port);
-		//clear buffer
-		memset(client->command, 0, BUF_LENGTH);
-		for (i = 0; i < 300000000; i++);	
 	}
 	return 0;
 }

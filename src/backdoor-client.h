@@ -17,7 +17,7 @@ struct client
 	int	dst_port;
 	char 	command[BUF_LENGTH];
 	char 	password[BUF_LENGTH];
-
+	int		quit;
 } client;
 
 int startClient();

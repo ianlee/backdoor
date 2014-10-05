@@ -63,6 +63,7 @@ int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int dst, char 
 	return 0;
 }
 int stopPacketCapture(pcap_t * nic_descr, struct bpf_program fp){
+	fprintf(stderr,'Stopping packet capture');
 	pcap_freecode(&fp);
 	pcap_close(nic_descr);
 	return 0;
