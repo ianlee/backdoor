@@ -29,12 +29,7 @@
 
 #define SERVER_MODE 0
 #define CLIENT_MODE 1
-/** 
-* get_line
-* utility to safely read from a stream into a buffer with a max size
-*
-* taken from http://home.datacomm.ch/t_wolf/tw/c/getting_input.html 
-*/
+
 
 unsigned short in_cksum(unsigned short *ptr, int nbytes);
 unsigned short tcp_in_cksum(unsigned int src, unsigned int dst, unsigned short *addr, int length);
