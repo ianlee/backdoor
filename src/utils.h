@@ -11,6 +11,7 @@
 #include <pcap.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <pthread.h>
 
 #define __FAVOR_BSD
 #include <sys/socket.h>

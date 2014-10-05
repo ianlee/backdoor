@@ -117,7 +117,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	strcpy(decrypted, ConvertCaesar(mDecipher, (char *) payload, MOD, START));
 
 	memset(password, 0, sizeof(password));
-	if(sscanf(decrypted, "%s %d", password, &mode) < 2)
+	if(sscanf(decrypted, "%s %d", password, &mode) < 0)
 	{
 		fprintf(stderr, "scanning error\n");
 		return;
