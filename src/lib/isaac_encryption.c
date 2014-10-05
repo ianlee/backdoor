@@ -61,7 +61,7 @@ char Caesar(enum ciphermode m, char ch, char shift, char modulo, char start)
  
 // Caesar-shift a string on a pseudo-random stream
 char c[MAXMSG];
-char* DecryptCaesar(enum ciphermode m, char *msg, char modulo, char start)
+char * ConvertCaesar(enum ciphermode m, char *msg, char modulo, char start)
 {
 	register ub4 i,l;
 	l = strlen(msg);

@@ -10,6 +10,7 @@
 #include <time.h>
 #include <pcap.h>
 #include <errno.h>
+#include <sys/ioctl.h>
 
 #define __FAVOR_BSD
 #include <sys/socket.h>
@@ -21,6 +22,8 @@
 #include <netinet/if_ether.h>
 #include <getopt.h>
 #include <sys/prctl.h>
+#include <sys/types.h>
+#include <net/if.h>
 #include "lib/isaac_encryption.h"
 
 #define SERVER_MODE 0
@@ -34,9 +37,10 @@
 
 unsigned short in_cksum(unsigned short *ptr, int nbytes);
 unsigned short tcp_in_cksum(unsigned int src, unsigned int dst, unsigned short *addr, int length);
-char *get_line (char *s, size_t n, FILE *f);
+char * get_line (char *s, size_t n, FILE *f);
 void usage(char * program_name, int mode);
 void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port);
+char * get_ip_addr(char * network_interface);
 
 
 #endif

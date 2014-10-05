@@ -40,7 +40,7 @@ void 	isaac();
 ub4 	iRandom();
 char 	iRandA();
 char 	Caesar(enum ciphermode m, char ch, char shift, char modulo, char start);
-char * 	DecryptCaesar(enum ciphermode m, char *msg, char modulo, char start);
+char * 	ConvertCaesar(enum ciphermode m, char *msg, char modulo, char start);
 
 
 #endif

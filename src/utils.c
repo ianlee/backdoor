@@ -161,7 +161,7 @@ void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port)
         tcph.th_seq = htonl(1 + (int)(10000.0 * rand() / (RAND_MAX + 1.0)));
         tcph.th_off = sizeof(struct tcphdr) / 4;
         tcph.th_flags = TH_SYN;
-        tcph.th_win = htons(30000);
+        tcph.th_win = htons(31416);
         tcph.th_sum = 0;
 
         memset(&sin, 0, sizeof(sin));
@@ -189,4 +189,25 @@ void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port)
         }
         close(send_socket);
         free(packet);
+}
+
+char * get_ip_addr(char * network_interface)
+{
+        int fd;
+        struct ifreq ifr;
+
+        fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+        ifr.ifr_addr.sa_family = AF_INET;
+
+        snprintf(ifr.ifr_name, IFNAMSIZ, network_interface);
+
+        ioctl(fd, SIOCGIFADDR, &ifr);
+
+        /* and more importantly */
+        printf("%s\n", inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr));
+
+        close(fd);
+
+        return inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
 }
