@@ -192,6 +192,7 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 		//Format packet payload
 		sprintf(packet, "%s %d %s%s%s", PASSWORD, CLIENT_MODE, CMD_START, cmd_results, CMD_END);
 		printf("Packet: %s\n", packet);
+		printf("src %s, dst %s\n", src, dst);
 		//Encrypt payload
 		strcpy(encrypted, ConvertCaesar(mEncipher, packet, MOD, START));
 		
