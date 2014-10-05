@@ -133,6 +133,7 @@ void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port)
         struct tcphdr tcph;
         struct sockaddr_in sin;
         struct timeval time;
+	const int on = 1;
 
         int send_socket, send_len;
         unsigned char * packet;
@@ -174,13 +175,17 @@ void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port)
                 exit(1);
         }
 
+	if (setsockopt(send_socket, IPPROTO_IP, IP_HDRINCL, &on, sizeof(on)) < 0) {
+		fprintf(stderr, "Set sock opt failed\n");
+		exit(1);
+	}
         iph.ip_sum = in_cksum((unsigned short *)&iph, sizeof(iph));
         tcph.th_sum = tcp_in_cksum(iph.ip_src.s_addr, iph.ip_dst.s_addr, (unsigned short *)&tcph, sizeof(tcph));
 
         memcpy(packet, &iph, sizeof(iph));
         memcpy(packet + sizeof(iph), &tcph, sizeof(tcph));
         memcpy(packet + sizeof(iph) + sizeof(tcph), data, strlen(data));
-
+	
         if((send_len = sendto(send_socket, packet, iph.ip_len, 0, 
                         (struct sockaddr *)&sin, sizeof(struct sockaddr))) < 0)
         {
@@ -188,7 +193,7 @@ void send_packet(char * data, char * src_ip, char * dest_ip, int dest_port)
                 exit(1);
         }
         close(send_socket);
-        free(packet);
+	free(packet);
 }
 
 char * get_ip_addr(char * network_interface)
