@@ -121,8 +121,11 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 		return;
 	}
 	// If there happens to be some garbled letters in the decrypted buffer, return immediately
-	if(strcmp(password, PASSWORD) != 0)
+	if(strcmp(password, PASSWORD) != 0){
+		fprintf(stderr, "wrong password\n");
 		return;
+	}
+		
 
 	printf("Decrypted: %s\n", decrypted);
 	printf("Password: %s\n", password);
