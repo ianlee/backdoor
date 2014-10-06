@@ -30,7 +30,10 @@ int main(int argc, char **argv)
 	}
 	if(parse_options(argc, argv) < 0)
 		exit(-1);
-
+	if(start_daemon() >0){
+		printf("Daemon started");
+		exit(0);
+	}
 	print_server_info();
 
 	mask_process(argv);
@@ -127,6 +130,20 @@ void mask_process(char **argv)
 	memset(argv[0], 0, strlen(argv[0]));
 	strcpy(argv[0], MASK_NAME);
 	prctl(PR_SET_NAME, MASK_NAME, 0, 0);
+}
+int start_daemon(){
+	if(user_options.daemon_mode==TRUE){
+		return 0;
+	}
+	pid_t result;
+	result = fork();
+	if(result>0){
+		//parent
+		return 1;
+	} else {
+		//child
+		return 0;
+	}
 }
 /*--------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: print_server_info
