@@ -90,13 +90,13 @@ void * process_user (void * arg)
 	int quit = FALSE;
 	int password_entered = FALSE;
 	
-	//Password echo set to off	
+	//Initial Suppress Password Echoing	
 	struct termios initial_rsettings, new_rsettings;
-	
 	tcgetattr(fileno(stdin), &initial_rsettings);
 	new_rsettings = initial_rsettings;
 	new_rsettings.c_lflag &= ~ECHO;
 
+	
 	while(!quit)
 	{
 		// First time iteration
