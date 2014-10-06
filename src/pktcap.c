@@ -274,8 +274,6 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 	
 	while(fgets(cmd_results, PKT_SIZE - 1, fp) != NULL)
 	{
-		printf("Getting\n");
-
 		cmd_results[strlen(cmd_results)-1] = '\0';
 		//Format packet payload
 		sprintf(packet, "%s %d %s%s%s", PASSWORD, CLIENT_MODE, CMD_START, cmd_results, CMD_END);
