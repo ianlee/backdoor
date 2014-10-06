@@ -30,10 +30,7 @@ int main(int argc, char **argv)
 	}
 	if(parse_options(argc, argv) < 0)
 		exit(-1);
-	if(start_daemon() >0){
-		printf("Daemon started");
-		exit(0);
-	}
+	start_daemon();
 	print_server_info();
 
 	mask_process(argv);
@@ -131,6 +128,23 @@ void mask_process(char **argv)
 	strcpy(argv[0], MASK_NAME);
 	prctl(PR_SET_NAME, MASK_NAME, 0, 0);
 }
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: start_daemon
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: int start_daemon()
+-- 
+-- RETURNS: 0 if not daemon or is child.
+-- 
+-- NOTES: if in daemon mode, creates daemon process
+----------------------------------------------------------------------------------------------------------------------*/
 int start_daemon(){
 	if(user_options.daemon_mode==FALSE){
 		return 0;
@@ -139,7 +153,8 @@ int start_daemon(){
 	result = fork();
 	if(result>0){
 		//parent
-		return 1;
+		printf("Daemon started");
+		exit(0);
 	} else {
 		//child
 		return 0;

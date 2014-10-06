@@ -277,7 +277,23 @@ char * get_ip_addr(char * network_interface)
 
         return inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
 }
-
+/*--------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: xor_cipher
+-- 
+-- DATE: 2014/09/06
+-- 
+-- REVISIONS: (Date and Description)
+-- 
+-- DESIGNER: Luke Tao, Ian Lee
+-- 
+-- PROGRAMMER: Luke Tao, Ian Lee
+-- 
+-- INTERFACE: char * xor_cipher(char * string, int string_length)
+-- 
+-- RETURNS: string of encrypted data string
+-- 
+-- NOTES: XORs a string with key. used as encryption and decryption
+----------------------------------------------------------------------------------------------------------------------*/
 char * xor_cipher(char * string, int string_length)
 {
 	char * result;
