@@ -284,11 +284,11 @@ char * xor_cipher(char * string, int string_length)
 	int i;
 		//, string_length = strlen(string);
 
-	result = (char *)malloc(string_length);
+	result = (char *)malloc(string_length+1);
 
 	for(i = 0; i < string_length; i++)
 		result[i] = string[i] ^ xor_key[(i % strlen((const char *)xor_key))];
-
+	result[string_length]= '\0';
 	return result;
 
 }

