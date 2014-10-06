@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <sys/ioctl.h>
 #include <pthread.h>
+#include <termios.h>
 
 #define __FAVOR_BSD
 #include <sys/socket.h>

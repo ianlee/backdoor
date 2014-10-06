@@ -89,21 +89,33 @@ void * process_user (void * arg)
 	char buffer[BUF_LENGTH];
 	int quit = FALSE;
 	int password_entered = FALSE;
-	int i = 0;
+	
+	//Password echo set to off	
+	struct termios initial_rsettings, new_rsettings;
+	
+	tcgetattr(fileno(stdin), &initial_rsettings);
+	new_rsettings = initial_rsettings;
+	new_rsettings.c_lflag &= ~ECHO;
 
 	while(!quit)
 	{
 		// First time iteration
 		if(!password_entered)
 		{
+
 			printf("Enter a password: ");
-			strcpy(client->password, get_line(buffer, BUF_LENGTH, stdin));
+			
+			tcsetattr(fileno(stdin), TCSAFLUSH, &new_rsettings);
+			get_line(buffer, BUF_LENGTH, stdin);
+			tcsetattr(fileno(stdin), TCSANOW, &initial_rsettings);
+			strcpy(client->password, buffer);
+
 			password_entered = TRUE;
 			
 			memset(buffer, 0, sizeof(buffer));
 		}
 		//read input
-		printf("Enter a command: ");
+		printf("\nEnter a command: ");
 		strcpy(client->command, get_line(buffer, BUF_LENGTH, stdin));
 
 		if(strcmp(client->command, "quit") == 0)
@@ -121,7 +133,7 @@ void * process_user (void * arg)
 		//clear buffer
 		memset(client->command, 0, BUF_LENGTH);
 		//sleep to allow for response before prompting for next command
-		usleep(2500);
+		usleep(2500000);
 	
 	}
 	return 0;
