@@ -162,9 +162,8 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	/* define/compute tcp payload (segment) offset */
 	payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
 
-	memset(decrypted, 0, sizeof(decrypted));
 	/* Decrypt the payload */
-	decrypted = xor_cipher(payload);
+	decrypted = xor_cipher((char *)payload);
 	
 	printf("Decrypted: %s\n", decrypted);
 	memset(password, 0, sizeof(password));
@@ -186,12 +185,14 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 		send_command(command, ip, ntohs(tcp->th_sport));
 		printf("Sent\n");
 		free(command);
+		free(decrypted);
 		return;
 	}
 	else if (mode == CLIENT_MODE)
 	{
 		printf("%s\n", command);
 		free(command);
+		free(decrypted);
 		return;
 	}
 	else

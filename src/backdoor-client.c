@@ -118,7 +118,6 @@ void * process_user (void * arg)
 		
 		//clear buffer
 		memset(client->command, 0, BUF_LENGTH);
-		memset(encrypted_text, 0, sizeof(encrypted_text));
 
 		for (i = 0; i < 300000000; i++);	
 	}
