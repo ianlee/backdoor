@@ -153,7 +153,7 @@ int start_daemon(){
 	result = fork();
 	if(result>0){
 		//parent
-		printf("Daemon started");
+		printf("Daemon started\n");
 		exit(0);
 	} else {
 		//child
