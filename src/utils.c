@@ -149,9 +149,10 @@ void usage(char * program_name, int mode){
 	{
 		fprintf(stderr, "Usage: %s [-d daemon mode] [-p port]\n", program_name);
 		fprintf(stderr, "-d 	- Daemon mode (run the server process in the background)\n");
-		fprintf(stderr, " 	- IF NOT SPECIFIED, default is port 8080\n");
-		fprintf(stderr, "-p 	- Destination Port to capture packets from\n");
 		fprintf(stderr, " 	- IF NOT SPECIFIED, default is running server in foreground with messages displayed\n");
+		fprintf(stderr, "-p 	- Destination Port to capture packets from\n");
+		fprintf(stderr, " 	- IF NOT SPECIFIED, default is port 8080\n");
+		
 	}
 	if(mode == CLIENT_MODE)
 	{
