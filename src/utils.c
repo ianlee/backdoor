@@ -278,10 +278,11 @@ char * get_ip_addr(char * network_interface)
         return inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
 }
 
-char * xor_cipher(char * string)
+char * xor_cipher(char * string, int string_length)
 {
 	char * result;
-	int i, string_length = strlen(string);
+	int i;
+		//, string_length = strlen(string);
 
 	result = (char *)malloc(string_length);
 

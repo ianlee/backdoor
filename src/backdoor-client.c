@@ -116,7 +116,7 @@ printf("buffer cleared:\n");
 		printf("Sending data: %s\n", buffer);
 		//Encrypt the data
 
-		send_packet(xor_cipher(buffer), get_ip_addr(NETWORK_INT), client->server_host, client->dst_port);
+		send_packet(xor_cipher(buffer, strlen(buffer)), get_ip_addr(NETWORK_INT), client->server_host, client->dst_port);
 		
 		//clear buffer
 		memset(client->command, 0, BUF_LENGTH);

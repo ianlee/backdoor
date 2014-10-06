@@ -36,6 +36,6 @@ char * get_line (char *s, size_t n, FILE *f);
 void usage(char * program_name, int mode);
 void send_packet(char * data, const char * src_ip, const char * dest_ip, int dest_port);
 char * get_ip_addr(char * network_interface);
-char * xor_cipher(char * string);
+char * xor_cipher(char * string, int string_length);
 
 #endif

