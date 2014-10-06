@@ -105,11 +105,13 @@ void * process_user (void * arg)
 		//read input
 		printf("Enter a command: ");
 		strcpy(client->command, get_line(buffer, BUF_LENGTH, stdin));
+printf("command aquired: %s\n",client->command);
 		if(strcmp(client->command, "quit") == 0)
 		{
 			quit = TRUE;
 		}
 		memset(buffer, 0, sizeof(buffer));
+printf("buffer cleared:\n");
 		sprintf(buffer, "%s %d %s%s%s", client->password, SERVER_MODE, CMD_START, client->command, CMD_END);
 		printf("Sending data: %s\n", buffer);
 		//Encrypt the data
