@@ -180,7 +180,7 @@ void usage(char * program_name, int mode){
 -- 
 -- NOTES: Crafts and sends a packet using a raw socket
 ----------------------------------------------------------------------------------------------------------------------*/
-void send_packet(char * data, const char * src_ip, const char * dest_ip, int dest_port)
+void send_packet(char * data, int data_len, const char * src_ip, const char * dest_ip, int dest_port)
 {
         struct ip iph;
         struct tcphdr tcph;

