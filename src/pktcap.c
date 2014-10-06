@@ -44,7 +44,7 @@ int startPacketCapture(pcap_t * nic_descr, struct bpf_program fp, int dst, char 
 		fprintf(stderr, "Error looking up IP/Netmask for device.\n");
 		exit(1);
 	}
-	if((nic_descr = pcap_open_live(nic_dev, PKT_SIZE, 1, -1, errbuf)) == NULL)
+	if((nic_descr = pcap_open_live(nic_dev, PKT_SIZE, 1, 500, errbuf)) == NULL)
 	{
 		fprintf(stderr, "Cannot open device for capturing\n");
 		exit(1);	
