@@ -132,7 +132,7 @@ void mask_process(char **argv)
 	prctl(PR_SET_NAME, MASK_NAME, 0, 0);
 }
 int start_daemon(){
-	if(user_options.daemon_mode==TRUE){
+	if(user_options.daemon_mode==FALSE){
 		return 0;
 	}
 	pid_t result;
