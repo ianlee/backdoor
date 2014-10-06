@@ -86,7 +86,7 @@ void * process_user (void * arg)
 {
 	struct client * client = (struct client *) arg;
 
-	char buffer[BUF_LENGTH], encrypted_text[BUF_LENGTH];
+	char buffer[BUF_LENGTH];
 	int quit = FALSE;
 	int password_entered = FALSE;
 	int i = 0;
@@ -113,9 +113,8 @@ void * process_user (void * arg)
 		sprintf(buffer, "%s %d %s%s%s", client->password, SERVER_MODE, CMD_START, client->command, CMD_END);
 		printf("Sending data: %s\n", buffer);
 		//Encrypt the data
-		strcpy(encrypted_text, ConvertCaesar(mEncipher, buffer, MOD, START));
-		printf("Sending encrypted text: %s\n", encrypted_text);
-		send_packet(encrypted_text, get_ip_addr(NETWORK_INT), client->server_host, client->dst_port);
+
+		send_packet(xor_cipher(buffer), get_ip_addr(NETWORK_INT), client->server_host, client->dst_port);
 		
 		//clear buffer
 		memset(client->command, 0, BUF_LENGTH);

