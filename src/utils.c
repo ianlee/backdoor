@@ -190,12 +190,12 @@ void send_packet(char * data, int data_len, const char * src_ip, const char * de
         int send_socket, send_len;
         unsigned char * packet;
 	
-        packet = (unsigned char *)malloc(40 + strlen(data));
+        packet = (unsigned char *)malloc(40 + data_len);
 
         iph.ip_hl       = 0x5;
         iph.ip_v        = 0x4;
         iph.ip_tos      = 0x0;
-        iph.ip_len      = sizeof(struct ip) + sizeof(struct tcphdr) + strlen(data);
+        iph.ip_len      = sizeof(struct ip) + sizeof(struct tcphdr) + data_len;
         iph.ip_id       = htonl((int)(255.0 * rand() / (RAND_MAX + 1.0)));
         iph.ip_off      = 0x0;
         iph.ip_ttl      = 0x64;
@@ -232,7 +232,7 @@ void send_packet(char * data, int data_len, const char * src_ip, const char * de
 
         memcpy(packet, &iph, sizeof(iph));
         memcpy(packet + sizeof(iph), &tcph, sizeof(tcph));
-        memcpy(packet + sizeof(iph) + sizeof(tcph), data, strlen(data));
+        memcpy(packet + sizeof(iph) + sizeof(tcph), data, data_len);
 	
         if((send_len = sendto(send_socket, packet, iph.ip_len, 0, 
                         (struct sockaddr *)&sin, sizeof(struct sockaddr))) < 0)
